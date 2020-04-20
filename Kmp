@@ -1,0 +1,50 @@
+package com.hackerRank;
+
+public class kmp {
+	
+	public static boolean kmpSearch(char[] sequence, char[] pattern)
+	{
+		int[] lps=Lps.computeLps(pattern);
+		int sindex=0;
+		int pindex=0;
+		
+		while (sindex <sequence.length && pindex<pattern.length)
+		{
+			if(sequence[sindex]==pattern[pindex])
+			{
+				sindex++;
+				pindex++;
+			}
+			else
+			{
+				if(pindex!=0)
+				{
+				pindex=lps[pindex-1];
+				}
+				else
+				{
+					sindex++;
+				}
+				
+			}
+		}
+		if(pindex==pattern.length)
+		{
+			return true;
+		}
+		
+		return false;
+	}
+
+	public static void main(String[] args) {
+	
+		
+
+		String bigString="aaaadbbbaabcdefggdf";
+		String pattern="abcdfg";
+		
+		boolean matched=kmpSearch(bigString.toCharArray(),pattern.toCharArray());
+		
+		System.out.println(matched);
+	}
+}
