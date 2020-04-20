@@ -1,0 +1,48 @@
+package com.hackerRank;
+
+public class Lps {
+	
+	
+	public static int[] computeLps(char[] pat)
+	{
+	    int lps[]=new int[pat.length];         
+        int index=0;
+        int moving=1;
+        lps[0]=0;
+        while (moving<pat.length)
+        {
+       	 if(pat[index]==pat[moving])
+       	 {
+       		 lps[moving]=index+1;
+       		 moving++;
+       		 index++;        		 
+       	 }
+       	 else
+       	 {
+       		 if(index!=0)
+       		 {
+       			 index=lps[index-1];
+       			 
+       		 }
+       		 else {
+       			 
+       			 lps[moving]=0;
+       			 moving++;
+       		 }
+       	 }
+        }
+        return lps;
+	}
+	
+
+	public static void main(String[] args) {
+	     String pattern= "abcdabcy";                 
+         char [] pat=pattern.toCharArray();
+         
+         int [] lps= computeLps(pat);
+                
+         System.out.println(lps);
+     
+	}
+  
+}
