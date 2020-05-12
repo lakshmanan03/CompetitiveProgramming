@@ -1,0 +1,43 @@
+package com.hackerRank;
+
+public class PermuteInterleave {
+
+	public static void main(String[] args) {		
+		
+		
+		String left ="AB";
+		String right="MN";
+		String interleave="";
+		permute(left,right,interleave);
+		}                                    
+	private static void permute(String left, String right,String interleave) {
+		
+		if(left==null)
+		{
+			System.out.println(right);
+		}
+		if(right==null)
+		{
+			System.out.println(left);
+		}
+		if(left.length()==0 && right.length()==0)
+		{
+			 System.out.println(interleave);
+			 
+		}
+		String lef="";
+		if(left.length()>0)
+		{
+			String inter=interleave+left.charAt(0);
+			 lef=left.substring(1);
+			permute(lef,right,inter);
+		}
+		if(right.length()>0)
+		{
+			String inter=interleave+right.charAt(0);
+			String rig=right.substring(1);
+			permute(left,rig,inter);
+		}
+	}
+
+}
