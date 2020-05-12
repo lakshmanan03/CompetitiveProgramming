@@ -1,0 +1,34 @@
+package com.hackerRank;
+
+public class Permute {
+	
+	
+
+	public static void main(String[] args) {
+		
+		String s ="ABCefy";
+		permute("",s);
+		
+	
+	}
+                                      
+	private static void permute(String left, String right) {
+		if(right.length()==0)
+		{
+			System.out.println(left);
+		}
+		else
+		{
+		for(int i =0; i < right.length();i++)
+		{
+			String lef=left+right.charAt(i);
+			String rig=right.substring(0,i)+right.substring(i+1,right.length());
+			
+			permute(lef,rig);
+		
+		
+		}
+		}
+	}
+
+}
