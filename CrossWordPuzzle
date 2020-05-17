@@ -1,0 +1,312 @@
+package com.hackerRank;
+
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+
+public class GridPuzzle {
+	public static class Position {
+		int x, y;
+		int length;
+		String layout;
+		public Position(int x, int y, int length, String layout) {
+			super();
+			this.x = x;
+			this.y = y;
+			this.length = length;
+			this.layout = layout;
+		}
+	}
+	public static Map<String, Position> SolvePuzzle(Queue<Position> positions, Map<Integer, Queue<String>> wordsMap) {
+		Map<String,Position> result = new HashMap<>();
+		int completedSize= positions.size();
+		Position currentPosition =positions.remove();
+		boolean solved= solveCrossWord(currentPosition,positions,result,wordsMap,completedSize);	
+		return result;
+	}
+
+	public static  boolean solveCrossWord(Position currentPosition, Queue<Position> positions, Map<String, Position> result,Map<Integer, Queue<String>> wordsMap, int completedSize)
+	{
+		if(result.size()==completedSize)
+		{
+			return true;
+		}
+		
+		Queue<String> words=wordsMap.get(currentPosition.length);
+		for(String toSolve:words) {
+		
+		String [][] grid= buildGrid(4);		
+	    grid=fillWord(grid,currentPosition);
+	     int[] intersection= new int[2];
+	     boolean solved=false;
+		
+		  Queue<String> matchedWords= new LinkedList<>();
+		  Deque<Position> matchedPositions= new LinkedList<>();
+		  int intersections=0;
+		  	for (Position position :positions)
+		{  			
+			if(position.equals(currentPosition))
+				continue;
+			
+			int [] intersection1 =findPosition(grid,position);
+		    
+			if (intersection[0]==0 && intersection1[0]==0 && intersection1[1]==0 && intersection[1]==0 )
+			{
+				continue;
+			}
+			intersections++;
+			int charPosCurrentWord = findCharPosition(intersection1,currentPosition);
+			int charPosCrossWord =findCharPosition(intersection1,position);
+		    char CharToBeMatched = toSolve.charAt(charPosCurrentWord);
+		    String matchedWord="";
+		  Queue<String> crossingWords=wordsMap.get(position.length);
+		  boolean matchFound=false;
+		    for (String crossingWord:crossingWords)
+		    {   
+		    	if(crossingWord!=toSolve)
+		    	if(crossingWord.charAt(charPosCrossWord)==toSolve.charAt(charPosCurrentWord))
+		    	{
+		    		matchedWord=crossingWord;
+		    		matchedWords.add(matchedWord);
+		    		matchedPositions.add(position);
+		    		matchFound=true;
+		    		positions.remove(position);
+		    		if(!result.containsKey(toSolve))
+		    		result.put(toSolve,currentPosition);
+		    	result.put(matchedWord,position);
+		    	break;
+		    	
+		    	    
+		    	}
+		    }
+		    if(!matchFound && intersections> 0)
+		     break;
+		    return solveCrossWord(position,positions,result,wordsMap,completedSize);
+		    
+		}  
+		  	
+		  
+		  		if(intersections==0)
+		  		{   
+		  			if(!result.containsKey(toSolve))
+		  			result.put(toSolve,currentPosition);
+		  			return solveCrossWord(positions.remove(),positions,result,wordsMap,completedSize);
+		  		}
+		
+		
+		}
+		     
+		
+		    
+		   return false;
+	}
+
+	public static int findCharPosition(int[] intersection, Position currentPosition) {
+		
+		if(currentPosition.x==intersection[0])
+		{
+		return intersection[1]-currentPosition.y;
+		}	
+	    return intersection[0]-currentPosition.x;
+		
+	} 
+
+	public static int[] findPosition(String[][] grid, Position position) {
+		
+		int x = position.x;
+		int y = position.y;
+		int[] intersection= new int[2];
+		if(position.layout.equals("vertical"))
+		{
+		for(int i=x; i<position.length;i++ )
+		{  
+			
+		if(grid[i][y]=="-")
+		
+		{
+			intersection[0]=i;
+			intersection[1]=y;
+			break;
+		}
+	     		
+		}
+		}
+		else
+		{
+			for(int i=y; i<position.length;i++ )
+			{
+				if(grid[x][i]=="-")
+				{
+					intersection[0]=x;
+					intersection[1]=i;
+					break;
+				}
+				 
+			}
+		}
+		return intersection;
+	}
+
+	public static String[][] fillWord(String[][] grid, Position currentPosition) {
+		
+		int x = currentPosition.x;
+		int y = currentPosition.y;
+		
+		if(currentPosition.layout.equals("vertical"))
+		{
+		for(int i=x; i<currentPosition.length;i++ )
+		{
+			 grid[i][y]="-";
+		}
+		}
+		else
+		{
+			for(int i=y; i<currentPosition.length;i++ )
+			{
+				 grid[x][i]="-";
+			}
+		}
+		return grid;
+	}
+
+	public static String[][] buildGrid(int length) {		
+		String[][] grid = new String[length][length];
+		for(int i =0;i<length;i++)
+		{
+			for(int j=0;j<length;j++)
+			{
+				grid[i][j]="+";
+			}
+		}
+		return grid;
+		
+	}
+
+	public static Queue<Position> populatePositions(String[] grid, Map<Integer, Queue<String>> wordsMap) {
+
+		Queue<Position> positions = new LinkedList<>();
+
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid.length; j++) {
+				if (grid[i].charAt(j) == '-') {
+					// vertical positions
+					Position positionv = new Position(i, j, 0, "");
+					int vlength = 0;
+					int row = i;
+					if (row != 0 && grid[row - 1].charAt(j) == '-') {
+
+					} else {
+						while (row < grid.length && grid[row].charAt(j) == '-') {
+							vlength++;
+							row++;
+						}
+						positionv.length = vlength;
+						positionv.layout = "vertical";
+						if (wordsMap.containsKey(positionv.length) && positionv.length > 1)
+							positions.add(positionv);
+					}
+
+					// horizontal positions
+					Position positionh = new Position(i, j, 0, "");
+					int hlength = 0;
+					int column = j;
+
+					if (column != 0 && grid[i].charAt(column - 1) == '-') {
+
+					} else {
+						while (column < grid.length && grid[i].charAt(column) == '-') {
+							hlength++;
+							column++;
+						}
+						positionh.length = hlength;
+						positionh.layout = "horizontal";
+						if (wordsMap.containsKey(positionh.length) && positionh.length > 1)       
+							positions.add(positionh);
+					}
+
+				}
+
+			}
+		}
+		return positions;
+	}
+	public static void main(String[] args) {
+		String grid[] = { "+---", "++--", "----","++++" };  
+		                                              
+		Queue<String> words = new LinkedList<>();     
+		words.add("kate");
+		words.add("sea");
+		words.add("eat");
+		words.add("ace");
+				
+		Map<Integer,Queue<String>> wordsMap = new HashMap<>();
+		for (String word : words) {
+			int key= word.length();
+			if(wordsMap.containsKey(key))
+			{
+			Queue<String> toAdd=wordsMap.get(key);
+			toAdd.add(word);
+			wordsMap.put(key,toAdd);
+			}	
+			else
+			{
+			Queue<String> newQ = new LinkedList<>();
+			newQ.add(word);
+			wordsMap.put(key,newQ);
+			}
+		}
+		Queue<Position> positions = populatePositions(grid,wordsMap);	
+		Map<String, Position> solved = SolvePuzzle(positions, wordsMap);
+		String[][] result =buildGrid(grid[0].length());
+		Set<String> wSet=solved.keySet();
+	    Iterator it=wSet.iterator();
+		while(it.hasNext()) {
+	   String word= (String) it.next();
+	  
+	  result=  fillResult(word,result,solved.get(word));
+	  
+		}
+	    
+		for(int i=0;i<grid[0].length();i++)
+		{
+			for(int j=0;j<grid[0].length();j++)
+			{
+				System.out.print(result[i][j]);
+			}
+		    System.out.println("");
+		}
+	    
+	}
+
+	public static String[][] fillResult(String word, String[][] result, Position position) {
+
+		int x = position.x;
+		int y = position.y;
+		
+		if(position.layout.equals("vertical"))
+		{
+			int pos=0;
+		for(int i=x; i<position.length;i++ )
+		{
+			 result[i][y]=""+word.charAt(pos);
+			 pos++;
+		}
+		}
+		else
+		{
+			int pos=0;
+			for(int i=y; i<position.length;i++ )
+			{
+				 result[x][i]=""+word.charAt(pos);
+				 pos++;
+			}
+		}
+		return result;
+		
+	}
+
+}
