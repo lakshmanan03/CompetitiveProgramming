@@ -1,0 +1,90 @@
+package com.hackerRank;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+public class SherlockAndValidString {
+
+	public static void main(String[] args) {
+
+ String s="aabbccddeefghi";
+ 
+ boolean matchFound =false;
+
+	     int[] count = new int[26];
+
+	     Map<Integer,Integer> alCount = new HashMap<>();
+
+	     for(int i =0; i<s.length();i++)
+	     {
+	       count[s.charAt(i)-'a'] = count[s.charAt(i)-'a']+1;
+	     }
+
+	     for(int j=0;j<26;j++)
+	     {
+	          if(count[j]==0)
+	          {
+	              continue;
+	          }
+	          if(alCount.containsKey(count[j]))
+	          {
+	              alCount.put(count[j],alCount.get(count[j])+1);
+	          }
+	          else
+	          {
+	              alCount.put(count[j],1);
+	          }
+	     }
+	          
+	          if(alCount.keySet().size()>2)
+	          {
+	          System.out.println("NO");
+	          matchFound=true;
+	          }
+
+	          if(alCount.keySet().size()==1)
+	          {
+	          System.out.println("YES");
+	          matchFound=true;
+	          }
+	          
+	          int max=0;
+	          int pos=0;
+	          int [] freq = new int[2];
+	           
+	           
+
+	          if(alCount.keySet().size()==2)
+	          {
+	        	  Iterator it = alCount.keySet().iterator();
+		     
+		            while(it.hasNext())
+		            {
+		            	
+		            Integer tmx=(Integer)it.next();
+		             if(tmx>max)
+		            	 max=tmx;
+		             freq[pos]=tmx;
+		             pos++;
+		             
+		            }
+		            
+		            if(Math.abs(freq[0]-freq[1])==1 && alCount.get(max)==1)
+                    {System.out.println("YES");
+                    matchFound=true;}
+	        	  
+	              if(alCount.containsKey(1) && alCount.get(1)==1)
+	               {
+	            	  System.out.println("YES");
+	            	  matchFound=true;
+	               }
+	           
+	              
+	              
+	          }
+	 if(!matchFound)        
+System.out.println("NO");
+	}
+
+}
