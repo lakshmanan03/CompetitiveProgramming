@@ -1,0 +1,27 @@
+ package com.hackerRank;
+
+public class Radiation {
+
+	public static void main(String[] args) {
+ 
+		 String s="SOSOSOSOSDSDSKWOSDOSDOASDOASDFAFJDFDOSOSOWNSOSOSNDSKDDOSOSOSJDSDS"
+		 		+ "OOSOSDSDOSASSOASDSAOSOSODSDSOASDWS";
+
+		 int difference=0;
+	       for(int i =0; i<s.length()-2;)
+	       {
+	           if(s.charAt(i)!='S')
+	             difference++;
+	           
+	           if(s.charAt(i+1)!='O')
+		             difference++;
+	           
+	           if(s.charAt(i+2)!='S')
+		             difference++;
+	             i=i+3;
+	       }
+	       System.out.println(difference);
+
+	}
+
+}
