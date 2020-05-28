@@ -1,0 +1,109 @@
+package com.hackerRank;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ConstructArray {
+	
+	public  static class Node
+	{
+		public Node(int level, int value, List<Node> children) {
+			super();
+			this.level = level;
+			this.value = value;
+			this.children = children;
+		}
+		public int level;
+		public int value;
+		List<Node> children;
+		public int getLevel() {
+			return level;
+		}
+		public void setLevel(int level) {
+			this.level = level;
+		}
+		public int getValue() {
+			return value;
+		}
+		public void setValue(int value) {
+			this.value = value;
+		}
+		public List<Node> getChildren() {
+			return children;
+		}
+		public void setChildren(List<Node> children) {
+			this.children = children;
+		}
+		
+		
+	}
+	
+	public static class TreeNode
+	{
+		public Node root;
+		
+
+		public Node getRoot() {
+			return root;
+		}
+
+
+		public void setRoot(Node root) {
+			this.root = root;
+		}
+
+
+		public TreeNode() {
+			super();
+			List<Node> children = new ArrayList<>();
+			this.root = new Node (1,1,children);
+		}
+	}
+
+	public static void main(String[] args) {
+		
+		int n =4,x=2,k=3;
+		TreeNode  arrayTree= new TreeNode();
+            
+		System.out.println(createArray(arrayTree,n,2,3));
+	}
+
+	private static int createArray(TreeNode arrayTree, int level, int end, int range) {
+		       
+		List<Integer> result = new ArrayList<>();
+		addChildren(arrayTree.getRoot(),level,end,range,1,result); 
+		
+		return result.size();
+	}
+
+	private static void addChildren(Node root, int level, int end, int range,int curlevel,List<Integer>result) {
+		
+		if(curlevel==4)
+		{
+			return;
+		}
+		
+		List<Node> children = new ArrayList<>();
+		for(int i =1;i<=range;i++)
+		{
+		   if(i!=root.value)
+		   {
+			   if(root.level==level-1 && i==end)
+				   result.add(i);
+			 
+			   List<Node> childList = new ArrayList<>();
+			   Node child = new Node(root.level+1,i,childList);
+			   children.add(child);
+			   
+		   }
+		}
+		root.setChildren(children);
+		for(Node child :children)
+		{
+			addChildren(child,level,end,range,root.level+1,result);
+		}
+		
+		
+	}
+
+}
