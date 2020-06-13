@@ -1,0 +1,53 @@
+import java.util.Arrays;
+
+public class PickNumbers {
+	public static void main(String[] args) {		
+		int[]  nos = {4,6,5,3,3,1};
+		System.out.print(pick(nos));
+}
+	private static int pick(int[] nos) {
+		Arrays.sort(nos);
+		 int max=0;		 
+		 int left=nos[0];
+		 int leftCount=1;
+		 int right=0;
+		 int rightCount=0;
+		 int current=0;
+		 int pos=1;		
+		 while(nos[pos]==left)
+		 {
+			 leftCount++;
+			 pos+=1;
+		 }		 
+		 right=nos[pos];
+		 rightCount++;
+		 for( int i =pos+1 ;i <nos.length;i++)
+		 {
+			 current=nos[i];
+			 if(current==right)
+			{
+				rightCount++;
+				if(i==nos.length-1)
+				{
+					if(Math.abs(right-left)==1)
+					max =Math.max(max,rightCount+leftCount);max =Math.max(max,rightCount+leftCount);
+				}
+			} 
+			else
+			{		
+				if(Math.abs(right-left)==1)
+				max =Math.max(max,rightCount+leftCount);
+				left=right;
+				leftCount=rightCount;
+				rightCount=1;
+				right=current;
+			}
+		 }
+		 
+		 
+		
+		
+		return max;
+	}
+
+}
